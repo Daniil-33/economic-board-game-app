@@ -33,4 +33,4 @@
 See [review policy](docs/reviews/axes.md): architecture/design, specification conformance, correctness, performance, security and machine-checked style. Reviewers must be independent of implementation context and cite evidence. AI advice does not substitute for CI checks or a human review.
 
 ## Local checks
-`pnpm run check` (after installing dependencies with pinned pnpm); every PR includes the check status. Bootstrap CI has a TEMPORARY unfrozen install until lockfile is generated and committed.
+`pnpm run check` (after installing dependencies with pinned pnpm); every PR includes the check status. CI requires the committed lockfile and uses frozen installation.
