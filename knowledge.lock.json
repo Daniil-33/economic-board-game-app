@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "repository": "Daniil-33/economic-board-game",
+    "ref": "design/initial-mechanics-and-session-generation",
+    "commit": "4272f82ddd69be6638daa8622effe95ec92fb579",
+    "access": "private",
+    "authority": "product-gameplay",
+    "note": "Pinned discovery/design branch for traceability; individual normative requirements require approved status."
+  },
+  "implementation": {
+    "repository": "Daniil-33/economic-board-game-app",
+    "authority": "technical-specs-and-code"
+  },
+  "syncPolicy": {
+    "mode": "read-only",
+    "allowCopyPrivateSource": false,
+    "requireApprovalBeforeImplementation": true
+  }
+}

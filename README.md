@@ -1,7 +1,39 @@
 # Economic Board Game — implementation
 
-Implementation and infrastructure repository for the economic board game. This repository starts with an initial commit only; all subsequent project setup and game development must use feature branches and pull requests into `main`.
+Implementation repository for the multiplayer economic board game. **Status: bootstrap, no game rules implemented.**
 
-The separate [game knowledge repository](https://github.com/Daniil-33/economic-board-game) is the product-rules source of truth. It is private; do not copy its content, credentials or privileged links into this public repository. Approved implementation specs must reference a reviewed source commit.
+## Repository ownership
 
-See the upcoming bootstrap pull request for the workspace layout and contributor/agent instructions.
+- [Economic board game knowledge](https://github.com/Daniil-33/economic-board-game) is the **private** source of truth for product rules, balance, gameplay decisions and their approval status.
+- This repository owns **technical specifications, application code, infrastructure, tests and agent workflows**.
+- `knowledge.lock.json` pins the upstream reference read by specs. A pinned document is **not** automatically approved for implementation.
+- Do not mirror private upstream documents into this public repo, public CI logs, issue discussions or agent prompts.
+
+## Workflow
+
+`main` is the intended protected integration branch. Create `feature/*`, `fix/*` or `chore/*` from current `main`; propose small pull requests with traceable specs and evidence. Never self-merge an AI-authored change. See [engineering workflow](docs/workflow.md), [agent instructions](AGENTS.md), and [GitHub protection setup](docs/infrastructure/github-settings.md).
+
+## Layout
+
+- `apps/web` — Vue 3 browser app (not yet installed).
+- `apps/server` — authoritative Node.js service (not yet installed).
+- `packages/game-core` — deterministic rules engine, **must not depend on server/UI**.
+- `packages/protocol` — versioned commands/events/viewer DTOs.
+- `packages/test-utils` — deterministic fixtures and game scenarios.
+- `infra/` — local/dev/deployment infrastructure, staged after service decisions.
+- `specs/` — reviewed technical feature specs, plans and tasks.
+- `.agents/skills/` — project-specific repeatable agent procedures.
+
+## Bootstrap check
+
+Requires Node.js 24 and pnpm 10.34.7. Run:
+
+```sh
+corepack enable
+pnpm install --no-frozen-lockfile
+pnpm run check
+```
+
+The bootstrap does not have a committed lockfile yet. **Before approving this PR**, generate and commit `pnpm-lock.yaml` using the pinned pnpm version and switch CI to `pnpm install --frozen-lockfile`. This temporary workflow is not a precedent for normal feature PRs.
+
+No runtime deployment or external MCP secret configuration is provided by this PR.

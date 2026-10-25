@@ -1,0 +1,41 @@
+name: bootstrap
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bootstrap-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.7
+          run_install: false
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+          # Cache requires a committed lockfile. Disabled until one is generated.
+          # (explicitly disable via package-manager-cache on setup-node v6+)
+      - name: Install pinned dependencies (bootstrap only)
+        run: pnpm install --no-frozen-lockfile
+      - name: Validate workspace, run TypeScript checks and smoke tests
+        run: pnpm run check
