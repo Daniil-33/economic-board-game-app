@@ -32,13 +32,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '24'
-          # Dependency caching intentionally disabled until pnpm-lock.yaml is committed.
-      - name: Install pinned dependencies (bootstrap only)
-        run: pnpm install --no-frozen-lockfile
+          cache: pnpm
+      - name: Install pinned dependencies
+        run: pnpm install --frozen-lockfile
       - name: Validate workspace, run TypeScript checks and smoke tests
         run: pnpm run check
-      - name: Print generated pnpm lockfile for first-time commit (temporary)
-        run: |
-          echo 'BEGIN_REAL_LOCKFILE'
-          cat pnpm-lock.yaml
-          echo 'END_REAL_LOCKFILE'
