@@ -37,3 +37,8 @@ jobs:
         run: pnpm install --no-frozen-lockfile
       - name: Validate workspace, run TypeScript checks and smoke tests
         run: pnpm run check
+      - name: Print generated pnpm lockfile for first-time commit (temporary)
+        run: |
+          echo 'BEGIN_REAL_LOCKFILE'
+          cat pnpm-lock.yaml
+          echo 'END_REAL_LOCKFILE'
