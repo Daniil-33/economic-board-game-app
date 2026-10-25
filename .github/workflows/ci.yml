@@ -32,9 +32,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '24'
-          cache: pnpm
-          # Cache requires a committed lockfile. Disabled until one is generated.
-          # (explicitly disable via package-manager-cache on setup-node v6+)
+          # Dependency caching intentionally disabled until pnpm-lock.yaml is committed.
       - name: Install pinned dependencies (bootstrap only)
         run: pnpm install --no-frozen-lockfile
       - name: Validate workspace, run TypeScript checks and smoke tests
