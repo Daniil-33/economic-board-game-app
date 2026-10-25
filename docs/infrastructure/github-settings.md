@@ -14,4 +14,4 @@ This file describes desired settings; **these settings have not been applied by 
 **This repository is public**, while the knowledge source is private. Before sharing any generated artifact externally, verify it contains no private gameplay text from upstream. `knowledge.lock.json` contains only repo identifier, branch and commit metadata. Public CI intentionally does not fetch private content. If private source quotations become necessary, switch implementation repository to private first or use explicitly approved private summaries.
 
 ## CI rollout
-The bootstrap workflow uses an unfrozen install **temporarily** because there is no existing `pnpm-lock.yaml`. Generate and commit a real lockfile with the pinned pnpm version, then change CI to `--frozen-lockfile` before enforcing required checks. Never fake a generated lockfile.
+The bootstrap workflow uses a real, CI-generated `pnpm-lock.yaml` and `pnpm install --frozen-lockfile`. Preserve the lockfile with every dependency change, and verify the exact status-check context before enabling required checks.
