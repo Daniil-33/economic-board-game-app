@@ -30,10 +30,10 @@ Requires Node.js 24 and pnpm 10.34.7. Run:
 
 ```sh
 corepack enable
-pnpm install --no-frozen-lockfile
+pnpm install --frozen-lockfile
 pnpm run check
 ```
 
-The bootstrap does not have a committed lockfile yet. **Before approving this PR**, generate and commit `pnpm-lock.yaml` using the pinned pnpm version and switch CI to `pnpm install --frozen-lockfile`. This temporary workflow is not a precedent for normal feature PRs.
+Dependency versions are pinned with the committed `pnpm-lock.yaml`; CI uses `pnpm install --frozen-lockfile`.
 
 No runtime deployment or external MCP secret configuration is provided by this PR.
