@@ -1,5 +1,9 @@
 #!/usr/bin/env node
-import { readKnowledgeLock, inspectPrivateDocumentStatus, verifyKnowledgeSource } from './knowledge/lib.mjs';
+import {
+  readKnowledgeLock,
+  inspectPrivateDocumentStatus,
+  verifyKnowledgeSource,
+} from './knowledge/lib.mjs';
 
 async function run(args) {
   const lock = readKnowledgeLock();
@@ -27,7 +31,7 @@ async function run(args) {
   if (meta.freshness === 'STALE') process.exitCode = 2;
 }
 
-run(process.argv.slice(2)).catch(error => {
+run(process.argv.slice(2)).catch((error) => {
   console.error('Knowledge check failed: ' + error.message);
   process.exitCode = 1;
 });
