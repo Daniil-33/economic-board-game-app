@@ -644,115 +644,266 @@ snapshots:
     dependencies:
       acorn: 8.19.0
 
-  aco…4351 tokens truncated…nding.axis');
-  requireValue(['P0', 'P1', 'P2', 'P3'].includes(item.severity), 'finding.severity');
-  object(item.location, ['file', 'line', 'scope'], 'finding.location');
-  if (item.location.file === null) {
-    requireValue(item.location.line === null, 'finding.location.line');
-    text(item.location.scope, 'finding.location.scope');
-  } else {
-    text(item.location.file, 'finding.location.file');
-    requireValue(
-      !item.location.file.startsWith('/') &&
-        !item.location.file.includes('\\') &&
-        item.location.file.split('/').every((part) => part && part !== '.' && part !== '..'),
-      'finding.location.file',
-    );
-    requireValue(
-      Number.isSafeInteger(item.location.line) && item.location.line > 0,
-      'finding.location.line',
-    );
-    requireValue(item.location.scope === null, 'finding.location.scope');
-  }
-  requireValue(
-    Array.isArray(item.evidence) && item.evidence.length > 0 && item.evidence.length <= 1000,
-    'finding.evidence',
-  );
-  item.evidence.forEach(evidence);
-  for (const field of ['risk', 'recommendedFix', 'testSuggestion'])
-    text(item[field], 'finding.' + field);
-}
+  acorn@8.19.0: {}
 
-/** Structural validation is NOT a test attestation, approval or merge gate. */
-export function validateReviewReport(report, expectedInput, expectedRunId) {
-  validateReviewInput(expectedInput);
-  match(expectedRunId, token, 'expectedRunId');
-  object(
-    report,
-    [
-      'schemaVersion',
-      'runId',
-      'axis',
-      'reviewer',
-      'input',
-      'startedAt',
-      'completedAt',
-      'coverage',
-      'gaps',
-      'disposition',
-      'reason',
-      'evidence',
-      'findings',
-    ],
-    'report',
-  );
-  requireValue(report.schemaVersion === 1, 'report.schemaVersion');
-  requireValue(report.runId === expectedRunId, 'report.runId');
-  requireValue(REVIEW_AXES.includes(report.axis), 'report.axis');
-  validateReviewInput(report.input);
-  requireValue(isDeepStrictEqual(report.input, expectedInput), 'report.input mismatch');
-  object(report.reviewer, ['id', 'model', 'configDigest', 'promptDigest'], 'report.reviewer');
-  match(report.reviewer.id, token, 'report.reviewer.id');
-  text(report.reviewer.model, 'report.reviewer.model');
-  match(report.reviewer.configDigest, digest, 'report.reviewer.configDigest');
-  match(report.reviewer.promptDigest, digest, 'report.reviewer.promptDigest');
-  for (const field of ['startedAt', 'completedAt']) {
-    requireValue(
-      typeof report[field] === 'string' &&
-        Number.isFinite(Date.parse(report[field])) &&
-        new Date(report[field]).toISOString() === report[field],
-      'report.' + field,
-    );
-  }
-  requireValue(Date.parse(report.completedAt) >= Date.parse(report.startedAt), 'report.timing');
-  texts(report.coverage, 'report.coverage', false);
-  texts(report.gaps, 'report.gaps');
-  requireValue(
-    ['pass', 'findings', 'blocked', 'not-applicable'].includes(report.disposition),
-    'report.disposition',
-  );
-  text(report.reason, 'report.reason');
-  requireValue(
-    Array.isArray(report.evidence) && report.evidence.length > 0 && report.evidence.length <= 1000,
-    'report.evidence',
-  );
-  report.evidence.forEach(evidence);
-  requireValue(Array.isArray(report.findings) && report.findings.length <= 1000, 'report.findings');
-  report.findings.forEach((item) => finding(item, report.axis));
-  requireValue(
-    new Set(report.findings.map((item) => item.id)).size === report.findings.length,
-    'finding.duplicateId',
-  );
-  if (report.gaps.length) requireValue(report.disposition === 'blocked', 'report.gaps disposition');
-  if (report.disposition === 'pass' || report.disposition === 'not-applicable') {
-    requireValue(report.findings.length === 0, 'report.findings disposition');
-  }
-  if (report.disposition === 'findings')
-    requireValue(report.findings.length > 0, 'report.empty findings');
-  return report;
-}
+  ajv@6.15.0:
+    dependencies:
+      fast-deep-equal: 3.1.3
+      fast-json-stable-stringify: 2.1.0
+      json-schema-traverse: 0.4.1
+      uri-js: 4.4.1
 
-/** Returns validated data, never a pass/fail decision for the PR. */
-export function validateReviewSet(reports, expectedInput, expectedRunId) {
-  requireValue(Array.isArray(reports) && reports.length === REVIEW_AXES.length, 'reports.count');
-  reports.forEach((report) => validateReviewReport(report, expectedInput, expectedRunId));
-  requireValue(
-    new Set(reports.map((report) => report.axis)).size === REVIEW_AXES.length,
-    'reports.duplicateAxis',
-  );
-  requireValue(
-    new Set(reports.map((report) => report.reviewer.id)).size === REVIEW_AXES.length,
-    'reports.duplicateReviewer',
-  );
-  return reports;
-}
+  balanced-match@4.0.4: {}
+
+  brace-expansion@5.0.12:
+    dependencies:
+      balanced-match: 4.0.4
+
+  cacheable@2.5.0:
+    dependencies:
+      '@cacheable/memory': 2.2.0
+      '@cacheable/utils': 2.5.0
+      hookified: 1.15.1
+      keyv: 5.6.0
+      qified: 0.10.1
+
+  cross-spawn@7.0.6:
+    dependencies:
+      path-key: 3.1.1
+      shebang-command: 2.0.0
+      which: 2.0.2
+
+  debug@4.4.3:
+    dependencies:
+      ms: 2.1.3
+
+  deep-is@0.1.4: {}
+
+  escape-string-regexp@4.0.0: {}
+
+  eslint-config-prettier@10.1.8(eslint@10.13.0):
+    dependencies:
+      eslint: 10.13.0
+
+  eslint-scope@9.1.2:
+    dependencies:
+      '@types/esrecurse': 4.3.1
+      '@types/estree': 1.0.9
+      esrecurse: 4.3.0
+      estraverse: 5.3.0
+
+  eslint-visitor-keys@3.4.3: {}
+
+  eslint-visitor-keys@5.0.1: {}
+
+  eslint@10.13.0:
+    dependencies:
+      '@eslint-community/eslint-utils': 4.10.1(eslint@10.13.0)
+      '@eslint-community/regexpp': 4.12.2
+      '@eslint/config-array': 0.23.5
+      '@eslint/config-helpers': 0.7.0
+      '@eslint/core': 1.2.1
+      '@eslint/plugin-kit': 0.7.3
+      '@humanfs/node': 0.16.8
+      '@humanwhocodes/module-importer': 1.0.1
+      '@humanwhocodes/retry': 0.4.3
+      '@types/estree': 1.0.9
+      ajv: 6.15.0
+      cross-spawn: 7.0.6
+      debug: 4.4.3
+      escape-string-regexp: 4.0.0
+      eslint-scope: 9.1.2
+      eslint-visitor-keys: 5.0.1
+      espree: 11.2.0
+      esquery: 1.7.0
+      esutils: 2.0.3
+      fast-deep-equal: 3.1.3
+      file-entry-cache: 11.1.5
+      find-up: 5.0.0
+      glob-parent: 6.0.2
+      ignore: 5.3.2
+      imurmurhash: 0.1.4
+      is-glob: 4.0.3
+      json-stable-stringify-without-jsonify: 1.0.1
+      minimatch: 10.2.6
+      natural-compare: 1.4.0
+      optionator: 0.9.4
+    transitivePeerDependencies:
+      - supports-color
+
+  espree@11.2.0:
+    dependencies:
+      acorn: 8.19.0
+      acorn-jsx: 5.3.2(acorn@8.19.0)
+      eslint-visitor-keys: 5.0.1
+
+  esquery@1.7.0:
+    dependencies:
+      estraverse: 5.3.0
+
+  esrecurse@4.3.0:
+    dependencies:
+      estraverse: 5.3.0
+
+  estraverse@5.3.0: {}
+
+  esutils@2.0.3: {}
+
+  fast-deep-equal@3.1.3: {}
+
+  fast-json-stable-stringify@2.1.0: {}
+
+  fast-levenshtein@2.0.6: {}
+
+  fdir@6.5.0(picomatch@4.0.7):
+    optionalDependencies:
+      picomatch: 4.0.7
+
+  file-entry-cache@11.1.5:
+    dependencies:
+      flat-cache: 6.1.23
+
+  find-up@5.0.0:
+    dependencies:
+      locate-path: 6.0.0
+      path-exists: 4.0.0
+
+  flat-cache@6.1.23:
+    dependencies:
+      cacheable: 2.5.0
+      flatted: 3.4.4
+      hookified: 1.15.1
+
+  flatted@3.4.4: {}
+
+  glob-parent@6.0.2:
+    dependencies:
+      is-glob: 4.0.3
+
+  globals@17.13.0: {}
+
+  hashery@1.5.1:
+    dependencies:
+      hookified: 1.15.1
+
+  hookified@1.15.1: {}
+
+  hookified@2.2.0: {}
+
+  ignore@5.3.2: {}
+
+  ignore@7.0.14: {}
+
+  imurmurhash@0.1.4: {}
+
+  is-extglob@2.1.1: {}
+
+  is-glob@4.0.3:
+    dependencies:
+      is-extglob: 2.1.1
+
+  isexe@2.0.0: {}
+
+  json-schema-traverse@0.4.1: {}
+
+  json-stable-stringify-without-jsonify@1.0.1: {}
+
+  keyv@5.6.0:
+    dependencies:
+      '@keyv/serialize': 1.1.1
+
+  levn@0.4.1:
+    dependencies:
+      prelude-ls: 1.2.1
+      type-check: 0.4.0
+
+  locate-path@6.0.0:
+    dependencies:
+      p-locate: 5.0.0
+
+  minimatch@10.2.6:
+    dependencies:
+      brace-expansion: 5.0.12
+
+  ms@2.1.3: {}
+
+  natural-compare@1.4.0: {}
+
+  optionator@0.9.4:
+    dependencies:
+      deep-is: 0.1.4
+      fast-levenshtein: 2.0.6
+      levn: 0.4.1
+      prelude-ls: 1.2.1
+      type-check: 0.4.0
+      word-wrap: 1.2.5
+
+  p-limit@3.1.0:
+    dependencies:
+      yocto-queue: 0.1.0
+
+  p-locate@5.0.0:
+    dependencies:
+      p-limit: 3.1.0
+
+  path-exists@4.0.0: {}
+
+  path-key@3.1.1: {}
+
+  picomatch@4.0.7: {}
+
+  prelude-ls@1.2.1: {}
+
+  prettier@3.9.10: {}
+
+  punycode@2.3.1: {}
+
+  qified@0.10.1:
+    dependencies:
+      hookified: 2.2.0
+
+  semver@7.8.5: {}
+
+  shebang-command@2.0.0:
+    dependencies:
+      shebang-regex: 3.0.0
+
+  shebang-regex@3.0.0: {}
+
+  tinyglobby@0.2.17:
+    dependencies:
+      fdir: 6.5.0(picomatch@4.0.7)
+      picomatch: 4.0.7
+
+  ts-api-utils@2.5.0(typescript@5.9.3):
+    dependencies:
+      typescript: 5.9.3
+
+  type-check@0.4.0:
+    dependencies:
+      prelude-ls: 1.2.1
+
+  typescript-eslint@8.72.1(eslint@10.13.0)(typescript@5.9.3):
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 8.72.1(@typescript-eslint/parser@8.72.1(eslint@10.13.0)(typescript@5.9.3))(eslint@10.13.0)(typescript@5.9.3)
+      '@typescript-eslint/parser': 8.72.1(eslint@10.13.0)(typescript@5.9.3)
+      '@typescript-eslint/typescript-estree': 8.72.1(typescript@5.9.3)
+      '@typescript-eslint/utils': 8.72.1(eslint@10.13.0)(typescript@5.9.3)
+      eslint: 10.13.0
+      typescript: 5.9.3
+    transitivePeerDependencies:
+      - supports-color
+
+  typescript@5.9.3: {}
+
+  uri-js@4.4.1:
+    dependencies:
+      punycode: 2.3.1
+
+  which@2.0.2:
+    dependencies:
+      isexe: 2.0.0
+
+  word-wrap@1.2.5: {}
+
+  yocto-queue@0.1.0: {}
