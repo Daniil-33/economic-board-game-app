@@ -7,8 +7,8 @@ function main(args) {
   let slug;
   const sourcePaths = [];
   for (let i = 0; i < args.length; i++) {
-    if (args[i] === '--slug' && args[i+1]) slug = args[++i];
-    else if (args[i] === '--source' && args[i+1]) sourcePaths.push(args[++i]);
+    if (args[i] === '--slug' && args[i + 1]) slug = args[++i];
+    else if (args[i] === '--source' && args[i + 1]) sourcePaths.push(args[++i]);
     else throw new Error('Usage: spec-scaffold --slug 001-feature --source docs/path.md');
   }
   const artifacts = buildSpecFiles(readKnowledgeLock(), { slug, sourcePaths });
@@ -21,5 +21,9 @@ function main(args) {
   console.log('Created Draft spec: specs/' + slug + ' (not authorized for implementation)');
 }
 
-try { main(process.argv.slice(2)); }
-catch (error) { console.error('Spec scaffold failed: ' + error.message); process.exitCode = 1; }
+try {
+  main(process.argv.slice(2));
+} catch (error) {
+  console.error('Spec scaffold failed: ' + error.message);
+  process.exitCode = 1;
+}

@@ -6,7 +6,7 @@ This file describes desired settings; **these settings have not been applied by 
 - Disallow direct pushes and force pushes; allow merges from PRs only.
 - Require successful checks, up-to-date branches or merge queue, and no unresolved conversations.
 - Require at least one **human** approval from someone other than the PR author (GitHub does not count a user's self-approval); if working solo, use a deliberate maintainer merge gate compatible with repo permissions and avoid claiming an unenforceable second reviewer.
-- Require status contexts `bootstrap / checks` only after the workflow has run at least once and the exact context name is confirmed.
+- Require status contexts `quality / format`, `quality / lint`, `quality / security` and `quality / tests` only after each workflow has run at least once and the exact context names are confirmed.
 - Restrict bypass roles, keep squash merge, disable unreviewed auto-merge and delete branches after merge.
 - Approve Actions/third-party apps and dependabot permissions separately. Never grant workflow PR untrusted code write access.
 
