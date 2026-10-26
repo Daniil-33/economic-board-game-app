@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "status": "ACCEPTED",
+  "approvedForImplementation": true,
+  "scope": "development-infrastructure",
+  "authority": {
+    "repository": "Daniil-33/economic-board-game-app",
+    "baselineCommit": "ecbd8cfcccd4a3cee0b9cd54616d06960a0af7de",
+    "paths": [
+      "AGENTS.md",
+      "docs/workflow.md",
+      "docs/knowledge-integration.md",
+      "docs/reviews/axes.md",
+      "docs/infrastructure/mcp.md"
+    ],
+    "draftDecision": "docs/decisions/0001-agentic-review-orchestration.md"
+  },
+  "source": {
+    "repository": "Daniil-33/economic-board-game",
+    "commit": "4272f82ddd69be6638daa8622effe95ec92fb579",
+    "paths": [],
+    "applicability": "NOT_APPLICABLE_INFRASTRUCTURE_ONLY",
+    "note": "Lock metadata only; no gameplay requirement derived or approved."
+  },
+  "gates": {
+    "sourceStatuses": "NOT_VERIFIED",
+    "humanApprovalRequired": true,
+    "architectureAccepted": true,
+    "specificationAccepted": true
+  },
+  "draftingConsent": {
+    "date": "2026-10-26",
+    "scope": "Prepare Draft documents from proposed architecture; not implementation approval."
+  },
+  "schemaNote": "Draft infrastructure-only extension; existing generator does not yet emit this shape. Requires acceptance and validator tests before automation.",
+  "pilotDecisions": {
+    "runtime": "current Codex working environment; manual invocation",
+    "model": "GPT-6 Astra",
+    "maxConcurrentReviewers": 3,
+    "attemptTimeoutMinutes": 10,
+    "maxTechnicalRetries": 1,
+    "separateModelApi": false,
+    "privateProcessingConsent": "Necessary private-source fragments may be processed by OpenAI in the selected environment; publication is not authorized by this consent.",
+    "humanGovernance": "User is final maintainer decision-maker and controls merge.",
+    "qualification": "PENDING: account-specific data handling/retention and effective isolation; no private access enabled by this record.",
+    "evidence": "User confirmations and subsequent instruction to create PR and start implementation in the current conversation."
+  },
+  "implementationAuthorization": {
+    "authority": "User in current conversation",
+    "scope": "Discussed PR-003 infrastructure architecture/specification; create PR and begin code. No gameplay, merge or operational activation authorized.",
+    "reviewedDraftSha256": {
+      "docs/decisions/0001-agentic-review-orchestration.md": "22cf233684f668586f8b6c1e9d2a562fb8b0fb84f1ff902ded193c8ca8bd8892",
+      "specs/003-agentic-development-review/spec.md": "bf98665a6c06bc6ba9ff419f1f4241578cdf6012838a9ff80d6f22df3258b667"
+    },
+    "note": "Conversation evidence recorded for human review; not a cryptographic or GitHub approval attestation."
+  }
+}
