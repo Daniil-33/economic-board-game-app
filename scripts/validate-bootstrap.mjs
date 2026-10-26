@@ -6,11 +6,14 @@ const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const required = [
   'README.md', 'AGENTS.md', 'knowledge.lock.json', 'pnpm-workspace.yaml',
   'docs/workflow.md', 'docs/reviews/axes.md', '.github/workflows/ci.yml',
+  'docs/knowledge-integration.md', 'docs/infrastructure/mcp.md',
+  'scripts/knowledge/lib.mjs', 'scripts/knowledge-status.mjs', 'scripts/spec-scaffold.mjs',
+  '.agents/skills/knowledge-sync/SKILL.md', '.agents/skills/spec-authoring/SKILL.md',
   'apps/web/package.json', 'apps/server/package.json',
   'packages/game-core/package.json', 'packages/protocol/package.json',
   'packages/test-utils/package.json',
 ];
-const missing = required.filter((p) => !existsSync(resolve(root, p)));
+const missing = required.filter(p => !existsSync(resolve(root, p)));
 if (missing.length) throw new Error('Missing bootstrap files: ' + missing.join(', '));
 
 const pkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8'));
@@ -24,5 +27,8 @@ if (lock.source.access !== 'private' || lock.syncPolicy.allowCopyPrivateSource !
 for (const p of ['apps/web', 'apps/server', 'packages/game-core', 'packages/protocol', 'packages/test-utils']) {
   const child = JSON.parse(readFileSync(resolve(root, p, 'package.json'), 'utf8'));
   if (!child.private || !child.scripts.typecheck) throw new Error('Invalid workspace package: ' + p);
+}
+for (const cmd of ['knowledge:status','knowledge:verify','spec:new']) {
+  if (typeof pkg.scripts[cmd] !== 'string') throw new Error('Missing knowledge command: ' + cmd);
 }
 console.log('Bootstrap structure and source provenance validated.');
