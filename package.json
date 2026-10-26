@@ -9,14 +9,23 @@
   },
   "scripts": {
     "guard": "node scripts/validate-bootstrap.mjs",
+    "format:check": "prettier --check \"*.{json,yml,yaml,mjs}\" \"scripts/**/*.mjs\" \"apps/**/*.ts\" \"packages/**/*.ts\" \"eslint.config.mjs\"",
+    "lint": "eslint .",
+    "security:check": "node scripts/security-check.mjs",
     "typecheck": "pnpm -r --if-present typecheck",
     "test": "node --test scripts/tests/*.test.mjs",
     "knowledge:status": "node scripts/knowledge-status.mjs",
     "knowledge:verify": "node scripts/knowledge-status.mjs --online",
     "spec:new": "node scripts/spec-scaffold.mjs",
-    "check": "pnpm run guard && pnpm run knowledge:status && pnpm run typecheck && pnpm run test"
+    "check": "pnpm run guard && pnpm run knowledge:status && pnpm run format:check && pnpm run lint && pnpm run security:check && pnpm run typecheck && pnpm run test"
   },
   "devDependencies": {
-    "typescript": "5.9.3"
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10",
+    "typescript": "5.9.3",
+    "typescript-eslint": "^8.72.1"
   }
 }

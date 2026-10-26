@@ -6,7 +6,9 @@ export const REPO_ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)
 const SHA = /^[0-9a-f]{40}$/;
 
 export function readKnowledgeLock(root = REPO_ROOT) {
-  return validateKnowledgeLock(JSON.parse(readFileSync(resolve(root, 'knowledge.lock.json'), 'utf8')));
+  return validateKnowledgeLock(
+    JSON.parse(readFileSync(resolve(root, 'knowledge.lock.json'), 'utf8')),
+  );
 }
 
 export function validateKnowledgeLock(lock) {
@@ -14,22 +16,31 @@ export function validateKnowledgeLock(lock) {
     throw new Error('Invalid knowledge lock schema');
   }
   const s = lock.source;
-  if (s.repository !== 'Daniil-33/economic-board-game' ||
-      typeof s.ref !== 'string' || !/^(?:[A-Za-z0-9._-]+\/)*[A-Za-z0-9._-]+$/.test(s.ref) ||
-      !SHA.test(s.commit) || s.access !== 'private' ||
-      lock.syncPolicy.mode !== 'read-only' ||
-      lock.syncPolicy.allowCopyPrivateSource !== false ||
-      lock.syncPolicy.requireApprovalBeforeImplementation !== true) {
+  if (
+    s.repository !== 'Daniil-33/economic-board-game' ||
+    typeof s.ref !== 'string' ||
+    !/^(?:[A-Za-z0-9._-]+\/)*[A-Za-z0-9._-]+$/.test(s.ref) ||
+    !SHA.test(s.commit) ||
+    s.access !== 'private' ||
+    lock.syncPolicy.mode !== 'read-only' ||
+    lock.syncPolicy.allowCopyPrivateSource !== false ||
+    lock.syncPolicy.requireApprovalBeforeImplementation !== true
+  ) {
     throw new Error('Unsafe or malformed knowledge source');
   }
   return lock;
 }
 
 export function validateSourcePath(path) {
-  if (typeof path !== 'string' || path.length > 240 ||
-      !/^docs\/[a-zA-Z0-9._/-]+\.md$/.test(path) ||
-      path.includes('..') || path.includes('//') || path.includes('\\') ||
-      path.split('/').includes('.')) {
+  if (
+    typeof path !== 'string' ||
+    path.length > 240 ||
+    !/^docs\/[a-zA-Z0-9._/-]+\.md$/.test(path) ||
+    path.includes('..') ||
+    path.includes('//') ||
+    path.includes('\\') ||
+    path.split('/').includes('.')
+  ) {
     throw new Error('Invalid knowledge document path');
   }
   return path;
@@ -78,7 +89,11 @@ export async function verifyKnowledgeSource(lock, token, fetchImpl = fetch) {
   const base = 'https://api.github.com/repos/' + s.repository;
   const [commit, ref] = await Promise.all([
     githubGet(base + '/commits/' + s.commit, token, fetchImpl),
-    githubGet(base + '/git/ref/heads/' + s.ref.split('/').map(encodeURIComponent).join('/'), token, fetchImpl),
+    githubGet(
+      base + '/git/ref/heads/' + s.ref.split('/').map(encodeURIComponent).join('/'),
+      token,
+      fetchImpl,
+    ),
   ]);
   if (commit?.sha !== s.commit || !SHA.test(ref?.object?.sha ?? '')) {
     throw new Error('Private GitHub metadata did not match expected shapes');
@@ -96,12 +111,22 @@ export async function inspectPrivateDocumentStatus(lock, path, token, fetchImpl 
   validateKnowledgeLock(lock);
   validateSourcePath(path);
   const s = lock.source;
-  const url = 'https://api.github.com/repos/' + s.repository + '/contents/' +
-    path.split('/').map(encodeURIComponent).join('/') + '?ref=' + s.commit;
+  const url =
+    'https://api.github.com/repos/' +
+    s.repository +
+    '/contents/' +
+    path.split('/').map(encodeURIComponent).join('/') +
+    '?ref=' +
+    s.commit;
   const result = await githubGet(url, token, fetchImpl);
-  if (result?.type !== 'file' || result?.encoding !== 'base64' ||
-      !Number.isInteger(result.size) || result.size > 250000 || result.size < 0 ||
-      typeof result.content !== 'string') {
+  if (
+    result?.type !== 'file' ||
+    result?.encoding !== 'base64' ||
+    !Number.isInteger(result.size) ||
+    result.size > 250000 ||
+    result.size < 0 ||
+    typeof result.content !== 'string'
+  ) {
     throw new Error('Private document cannot be safely inspected');
   }
   const raw = Buffer.from(result.content.replace(/\s/g, ''), 'base64').toString('utf8');
@@ -119,20 +144,39 @@ export function buildSpecFiles(lock, { slug, sourcePaths }) {
   }
   const paths = [...new Set(sourcePaths.map(validateSourcePath))];
   const base = 'specs/' + slug;
-  const references = paths.map(p => '- ' + p + ' @ ' + lock.source.commit + ' [source status: UNVERIFIED]').join('\n');
-  const spec = '# ' + slug + ' — technical specification\n\n' +
+  const references = paths
+    .map((p) => '- ' + p + ' @ ' + lock.source.commit + ' [source status: UNVERIFIED]')
+    .join('\n');
+  const spec =
+    '# ' +
+    slug +
+    ' — technical specification\n\n' +
     'Status: DRAFT, not approved for implementation.\n\n' +
-    'Source repository: ' + lock.source.repository + '\nSource commit: ' + lock.source.commit + '\n\n' +
-    '## Sources (metadata only; private text not copied)\n\n' + references + '\n\n' +
+    'Source repository: ' +
+    lock.source.repository +
+    '\nSource commit: ' +
+    lock.source.commit +
+    '\n\n' +
+    '## Sources (metadata only; private text not copied)\n\n' +
+    references +
+    '\n\n' +
     '## Requirements and acceptance scenarios\n\nTODO: write original technical requirements derived from separately approved private sources.\n\n' +
     '## Invariants and non-goals\n\nTODO: define state boundaries, hidden information, money/share conservation, rejection states.\n\n' +
     '## Approvals\n\n- [ ] Verify each source status at pinned SHA in trusted private environment.\n' +
     '- [ ] Resolve Draft/Proposed source conflicts.\n- [ ] Obtain explicit human approval for behavior and implementation.\n';
-  const plan = '# ' + slug + ' — technical plan\n\nStatus: DRAFT\n\n' +
-    'Source commit: ' + lock.source.commit + '\n\n' +
+  const plan =
+    '# ' +
+    slug +
+    ' — technical plan\n\nStatus: DRAFT\n\n' +
+    'Source commit: ' +
+    lock.source.commit +
+    '\n\n' +
     '## Architecture and implementation boundaries\n\nTODO: interfaces, dependencies, ADRs and error handling.\n\n' +
     '## Tests and risk\n\nTODO: deterministic acceptance and error cases, benchmarks, security.\n';
-  const tasks = '# ' + slug + ' — implementation tasks\n\nStatus: DRAFT / NOT AUTHORIZED\n\n' +
+  const tasks =
+    '# ' +
+    slug +
+    ' — implementation tasks\n\nStatus: DRAFT / NOT AUTHORIZED\n\n' +
     '- [ ] Human approval of specs and architecture.\n' +
     '- [ ] Implement scoped changes and tests on a feature branch.\n' +
     '- [ ] Independent review, CI checks and human merge gate.\n';
@@ -140,10 +184,17 @@ export function buildSpecFiles(lock, { slug, sourcePaths }) {
     [base + '/spec.md']: spec,
     [base + '/plan.md']: plan,
     [base + '/tasks.md']: tasks,
-    [base + '/provenance.json']: JSON.stringify({
-      schemaVersion: 1, status: 'DRAFT', approvedForImplementation: false,
-      source: { repository: lock.source.repository, commit: lock.source.commit, paths },
-      gates: { sourceStatuses: 'UNVERIFIED', humanApprovalRequired: true },
-    }, null, 2) + '\n',
+    [base + '/provenance.json']:
+      JSON.stringify(
+        {
+          schemaVersion: 1,
+          status: 'DRAFT',
+          approvedForImplementation: false,
+          source: { repository: lock.source.repository, commit: lock.source.commit, paths },
+          gates: { sourceStatuses: 'UNVERIFIED', humanApprovalRequired: true },
+        },
+        null,
+        2,
+      ) + '\n',
   };
 }

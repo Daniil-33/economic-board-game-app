@@ -16,6 +16,9 @@ Requires Node.js 24 and pnpm 10.34.7 with the committed lockfile.
     corepack enable
     pnpm install --frozen-lockfile
     pnpm run check
+    pnpm run format:check
+    pnpm run lint
+    pnpm run security:check
     pnpm run knowledge:status
     pnpm run knowledge:verify
     pnpm run spec:new -- --slug 001-game-engine --source docs/decisions/0001-engine-boundaries.md
@@ -37,4 +40,4 @@ spec:new generates only Draft spec/plan/tasks/provenance; human approval is requ
 
 ## Workflow
 
-Work in feature/fix/chore branches from main. All changes go through PRs; no direct agent merges. See AGENTS.md, docs/workflow.md and docs/reviews/axes.md. Branch protection must be configured by the repo administrator separately. Automated multi-axis LLM reviews are planned for PR-003 and are not yet running.
+Work in feature/fix/chore branches from main. All changes go through PRs; no direct agent merges. See AGENTS.md, docs/workflow.md and docs/reviews/axes.md. Branch protection must be configured by the repo administrator separately. Multi-axis LLM review is run manually in the local agent environment; public CI runs only deterministic quality checks.
